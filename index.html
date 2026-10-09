@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Net Worth">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121613" media="(prefers-color-scheme: dark)">
+<title>Net Worth</title>
+<style>
+:root{--bg:#f7f6f2;--surface:#fff;--surface2:#efeee8;--ink:#1c2320;--ink2:#5a655f;--ink3:#8a948e;--line:#e2e0d6;--green:#1a5c3f;--green-soft:#e3efe8;--red:#9c3a2e;--red-soft:#f6e7e3;--amber:#8a5a12;--amber-soft:#f7ecd4;--shadow:0 1px 2px rgba(28,35,32,.05),0 10px 30px rgba(28,35,32,.07)}
+@media (prefers-color-scheme:dark){:root{--bg:#121613;--surface:#1a201c;--surface2:#222a25;--ink:#eef2ee;--ink2:#a9b5ad;--ink3:#7d8a80;--line:#2c352f;--green:#5ec48f;--green-soft:#1d2f26;--red:#e08a7a;--red-soft:#33231f;--amber:#e0b45e;--amber-soft:#2e2716;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25)}}
+*{box-sizing:border-box}html,body{margin:0;padding:0}body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:28px 20px 56px}
+h1,h2{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.01em;margin:0}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.locked{max-width:420px;margin:12vh auto 0;text-align:center;padding:0 8px}
+.locked h1{font-size:42px;font-weight:700}
+.locked .sub{color:var(--ink2);font-size:15px;line-height:1.6;margin:14px 0 24px}
+.field{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+input[type="password"],input[type="text"]{font:inherit;font-size:18px;letter-spacing:.18em;text-align:center;padding:14px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);width:220px;outline:none}
+input:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
+.btn{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:15px;padding:14px 20px;border-radius:12px;background:var(--green);color:#fff}
+@media (prefers-color-scheme:dark){.btn{color:#0d1511}}
+.btn:active{transform:scale(.98)}
+.err{color:var(--red);font-size:14px;font-weight:600;min-height:22px;margin-top:14px}
+.daily{font-size:13px;color:var(--ink3);margin-top:28px;line-height:1.5}
+.hero .date{font-size:13px;color:var(--ink2);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.hero h1{font-size:26px;font-weight:600;color:var(--ink2);margin-top:10px}
+.big{font-family:Georgia,serif;font-size:clamp(52px,11vw,88px);line-height:.95;font-weight:700;letter-spacing:-.02em;margin:4px 0 8px}
+.subline{font-size:15px;line-height:1.55;color:var(--ink2)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:7px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}
+.chip.up{color:var(--green);border-color:transparent;background:var(--green-soft)}
+.chip.down{color:var(--red);border-color:transparent;background:var(--red-soft)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+@media(max-width:600px){.two{grid-template-columns:1fr 1fr}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .k{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+.stat .v{font-family:ui-monospace,monospace;font-weight:700;font-size:20px;margin-top:6px}
+section{margin-top:32px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.sec-head h2{font-size:24px;font-weight:700}
+.sec-head p{margin:0;font-size:13.5px;color:var(--ink2)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px}
+svg{width:100%;height:auto;display:block}
+.gridline{stroke:var(--line);stroke-width:1}
+.axis{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;fill:var(--ink3)}
+.axis-sm{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:11px;fill:var(--ink3)}
+.pt-label{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;fill:var(--ink);font-weight:700}
+.pt-date{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:13px;fill:var(--ink2)}
+.group-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin:20px 0 4px}
+.group-label:first-child{margin-top:0}
+.acct{border-bottom:1px solid var(--line);padding:6px 0}
+.acct:last-child{border-bottom:0}
+.acct-head{display:flex;gap:12px;padding:10px 0;align-items:flex-start;cursor:pointer;width:100%;background:none;border:0;text-align:left;color:inherit;font:inherit}
+.acct-head:hover{opacity:.92}
+.dot{flex:0 0 auto;width:42px;height:38px;border-radius:10px;display:grid;place-items:center;font-family:ui-monospace,monospace;font-size:10px;font-weight:700;background:var(--green-soft);color:var(--green);padding:0 4px;text-align:center;line-height:1.1;overflow:hidden}
+.dot.red{background:var(--red-soft);color:var(--red)}
+.main{flex:1;min-width:0}
+.name{font-weight:650;font-size:15px;line-height:1.3}
+.meta{font-size:13px;color:var(--ink2);margin-top:2px;line-height:1.45}
+.amt{text-align:right;font-family:ui-monospace,monospace;font-weight:700;font-size:14.5px;white-space:nowrap}
+.amt span{display:block;font-family:-apple-system,sans-serif;font-weight:500;font-size:11.5px;color:var(--ink3);margin-top:2px}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.03em;padding:2px 7px;border-radius:99px;vertical-align:1px;background:var(--amber-soft);color:var(--amber);margin-left:6px}
+.detail{padding:4px 0 14px 54px;display:none}
+.detail.open{display:block}
+.detail .vals{font-size:13px;color:var(--ink2);line-height:1.6;margin-top:8px}
+.detail .vals b{color:var(--ink);font-family:ui-monospace,monospace}
+.notes{font-size:13px;color:var(--ink2);line-height:1.7}
+.notes p{margin:0 0 8px}
+footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink3);line-height:1.6}
+.hidden{display:none!important}
+.range-btn{appearance:none;border:1px solid var(--line);background:var(--surface2);color:var(--ink);font:inherit;font-size:12.5px;font-weight:700;letter-spacing:.02em;padding:8px 14px;border-radius:999px;cursor:pointer;min-height:36px;min-width:54px;line-height:1;text-align:center;flex:0 0 auto}
+.range-btn:hover{border-color:var(--ink3)}
+.range-btn:active{transform:scale(.97)}
+.range-btn:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.chart-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.chart-head .range-label{font-size:12.5px;font-weight:600;color:var(--ink3)}
+.acct-chart .chart-head{margin-bottom:6px}
+.chart-wrap{position:relative;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.chart-wrap svg{touch-action:none}
+.scrub-label{position:absolute;display:none;pointer-events:none;z-index:6;transform:translate(-50%,-100%);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:700;line-height:1.25;padding:6px 10px;border-radius:10px;white-space:nowrap}
+.scrub-label.show{display:block}
+.xlabels{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:6px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12px;color:var(--ink2)}
+.xlabels span{white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="locked" class="locked">
+    <h1>Net Worth</h1>
+    <p class="sub">Enter the code to unlock.</p>
+    <form id="unlockForm" class="field" autocomplete="off">
+      <input id="codeInput" type="password" inputmode="text" autocomplete="off" placeholder="Enter code" aria-label="Passcode" style="width:min(340px,82vw);letter-spacing:.06em">
+      <button class="btn" type="submit" id="unlockBtn">Unlock</button>
+    </form>
+    <div class="err" id="errMsg" role="alert" aria-live="polite"></div>
+    <button type="button" id="retryBtn" class="btn hidden">Retry</button>
+    <p class="daily">Figures update daily.<br>This device will be remembered after you unlock, so you won't need to enter the code again here.</p>
+  </div>
+
+  <div id="unlocked" class="hidden">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button type="button" id="lockBtn" class="btn" style="background:var(--surface);color:var(--ink);border:1px solid var(--line);padding:10px 16px;font-size:14px">Lock</button></div>
+    <p id="staleNote" class="hidden" style="font-size:13px;color:var(--ink3);text-align:right;margin:-2px 0 14px">Showing the last figures saved on this device — they may not be the latest.</p>
+    <div class="hero">
+      <div class="date" id="updatedLine"></div>
+      <h1>Net worth</h1>
+      <div class="big" id="bigNum"></div>
+      <div class="chips" id="chips"></div>
+      <div class="two">
+        <div class="stat"><div class="k">Assets</div><div class="v" id="assetsVal"></div></div>
+        <div class="stat"><div class="k">Liabilities</div><div class="v" id="liabVal"></div></div>
+      </div>
+    </div>
+
+    <section>
+      <div class="sec-head"><h2>History &amp; trend</h2><p id="histMeta"></p></div>
+      <div class="card" id="chartCard"></div>
+    </section>
+
+    <section>
+      <div class="sec-head"><h2>Accounts</h2><p>Tap an account to see its trend</p></div>
+      <div class="card" id="accountsCard"></div>
+    </section>
+
+    <section id="notesSection" class="hidden">
+      <div class="sec-head"><h2>Notes</h2></div>
+      <div class="card notes" id="notesCard"></div>
+    </section>
+
+    <footer>Your passcode and decrypted figures stay in this browser. Encrypted figures are fetched from a private GitHub gist.</footer>
+  </div>
+</div>
+<script>
+var BLOB_URL = "https://gist.githubusercontent.com/MichalWozniczka/76dc1408b979cdd07790451536d54dbb/raw/net-worth-blob.txt";
+var GIST_API_URL = "https://api.github.com/gists/76dc1408b979cdd07790451536d54dbb";
+var BLOB_FILE = "net-worth-blob.txt";
+var BLOB_CACHE_KEY = "nw_blob_cache";
+var fetchedBlob = null;
+var blobPromise = null;
+var blobFromCache = false;
+var blobErrorDetail = "";
+function cacheBlob(text){ try{ localStorage.setItem(BLOB_CACHE_KEY, text); }catch(e){} }
+function loadCachedBlob(){ try{ return localStorage.getItem(BLOB_CACHE_KEY); }catch(e){ return null; } }
+function describeErr(e){
+  if(!e) return "unknown error";
+  var name = e.name || "Error";
+  var msg = e.message || String(e);
+  return msg ? name + ": " + msg : name;
+}
+function cacheBust(url){
+  return url + (url.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
+}
+async function fetchBlobFromApi(){
+  var res = await fetch(cacheBust(GIST_API_URL), {cache: "no-store"});
+  if(!res.ok) throw new Error("GitHub API returned HTTP " + res.status);
+  var json = await res.json();
+  var file = json && json.files && json.files[BLOB_FILE];
+  if(!file) throw new Error("gist file " + BLOB_FILE + " missing from API response");
+  if(file.truncated){
+    var rawRes = await fetch(cacheBust(file.raw_url), {cache: "no-store"});
+    if(!rawRes.ok) throw new Error("gist raw_url returned HTTP " + rawRes.status);
+    var rawText = (await rawRes.text()).trim();
+    if(!rawText) throw new Error("gist raw_url returned an empty blob");
+    return rawText;
+  }
+  var text = (file.content || "").trim();
+  if(!text) throw new Error("gist API returned an empty blob");
+  return text;
+}
+async function fetchBlobFromRaw(){
+  var res = await fetch(cacheBust(BLOB_URL), {cache: "no-store"});
+  if(!res.ok) throw new Error("raw gist URL returned HTTP " + res.status);
+  var text = (await res.text()).trim();
+  if(!text) throw new Error("raw gist URL returned an empty blob");
+  return text;
+}
+async function fetchBlobOnce(){
+  try{
+    return await fetchBlobFromApi();
+  }catch(apiErr){
+    var rawText = await fetchBlobFromRaw();
+    return rawText;
+  }
+}
+function sleep(ms){ return new Promise(function(resolve){ setTimeout(resolve, ms); }); }
+function getBlob(){
+  if(fetchedBlob) return Promise.resolve(fetchedBlob);
+  if(blobPromise) return blobPromise;
+  blobPromise = (async function(){
+    var delays = [1000, 3000];
+    var lastErr = null;
+    for(var attempt = 0; attempt < 3; attempt++){
+      try{
+        var text = await fetchBlobOnce();
+        fetchedBlob = text;
+        blobFromCache = false;
+        blobErrorDetail = "";
+        cacheBlob(text);
+        return text;
+      }catch(e){
+        lastErr = e;
+        if(attempt < delays.length){
+          try{ await sleep(delays[attempt]); }catch(sleepErr){}
+        }
+      }
+    }
+    var cached = loadCachedBlob();
+    if(cached){
+      fetchedBlob = cached;
+      blobFromCache = true;
+      return cached;
+    }
+    blobPromise = null;
+    blobErrorDetail = describeErr(lastErr);
+    var err = new Error("blob unavailable");
+    err.noBlob = true;
+    err.detail = blobErrorDetail;
+    throw err;
+  })();
+  return blobPromise;
+}
+function updateStaleNote(){
+  var n = document.getElementById("staleNote");
+  if(n) n.classList.toggle("hidden", !blobFromCache);
+}
+function showLoadError(detail){
+  var err = document.getElementById("errMsg");
+  var d = detail || blobErrorDetail || "";
+  if(err){
+    err.textContent = "Couldn't load the figures. Check your connection and try again.";
+    if(d){
+      var small = document.createElement("div");
+      small.style.cssText = "font-size:12px;font-weight:500;color:var(--ink3);margin-top:6px;word-break:break-word";
+      small.textContent = d;
+      err.appendChild(small);
+    }
+  }
+  var rb = document.getElementById("retryBtn");
+  if(rb) rb.classList.remove("hidden");
+}
+function hideLoadError(){
+  var err = document.getElementById("errMsg");
+  if(err) err.textContent = "";
+  var rb = document.getElementById("retryBtn");
+  if(rb) rb.classList.add("hidden");
+}
+
+var LS_KEY = "nw_remembered_code";
+function saveCode(c){ try{ localStorage.setItem(LS_KEY, c); }catch(e){} }
+function loadCode(){ try{ return localStorage.getItem(LS_KEY); }catch(e){ return null; } }
+function clearCode(){ try{ localStorage.removeItem(LS_KEY); }catch(e){} }
+var RANGES=[{label:"All",days:null},{label:"1W",days:7},{label:"1M",days:30},{label:"3M",days:90},{label:"6M",days:180},{label:"1Y",days:365}];
+function parseDateMs(dstr){
+  if(!dstr) return NaN;
+  var s=String(dstr);
+  var d=new Date(s.length===10 ? s+"T12:00:00" : s);
+  return d.getTime();
+}
+function filterSeries(series,days){
+  if(!series || !days) return series ? series.slice() : [];
+  if(!series.length) return [];
+  var latestMs=parseDateMs(series[series.length-1].date);
+  if(isNaN(latestMs)) return series.slice();
+  var cutoff=latestMs - days*86400000;
+  var out=series.filter(function(p){ var ms=parseDateMs(p.date); return isNaN(ms) ? true : ms>cutoff; });
+  return out.length ? out : series.slice(series.length-1);
+}
+var mainFullHistory=[];
+var mainRangeIdx=0;
+var acctChartState={};
+function b64ToBytes(b64){
+  var bin = atob(b64);
+  var bytes = new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+  return bytes;
+}
+function fmtMoney(n){
+  if(n==null || isNaN(n)) return "—";
+  var neg = n<0; var v=Math.abs(Math.round(n));
+  return (neg?"-$":"$")+v.toLocaleString("en-US");
+}
+function fmtCompact(n){
+  if(n==null || isNaN(n)) return "—";
+  if(n===0) return "0";
+  var neg=n<0, a=Math.abs(n), div=1, suffix="";
+  if(a>=1e6){ div=1e6; suffix="m"; }
+  else if(a>=1e3){ div=1e3; suffix="k"; }
+  var r=Number((a/div).toPrecision(3));
+  if(r>=1000 && suffix==="k"){ suffix="m"; r=Number((a/1e6).toPrecision(3)); }
+  else if(r>=1000 && suffix===""){ suffix="k"; r=Number((a/1e3).toPrecision(3)); }
+  return (neg?"-":"")+String(r)+suffix;
+}
+function fmtMoney2(n){
+  if(n==null || isNaN(n)) return "—";
+  return new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(n);
+}
+function fmtSigned(n){
+  if(n==null || isNaN(n)) return "";
+  var s = fmtMoney(Math.abs(n));
+  return (n>=0?"+":"−")+s.replace("$","$");
+}
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+function shortDate(dstr){
+  try{
+    var d=new Date(dstr+"T12:00:00");
+    if(isNaN(d)) return dstr;
+    return d.toLocaleDateString("en-US",{month:"short",day:"numeric"});
+  }catch(e){ return dstr; }
+}
+function longDate(dstr){
+  try{
+    var d=new Date(dstr);
+    if(isNaN(d)) d=new Date(dstr+"T12:00:00");
+    if(isNaN(d)) return dstr;
+    return d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+  }catch(e){ return dstr; }
+}
+
+async function tryUnlock(passcode){
+  var blobText = await getBlob();
+  var raw = b64ToBytes(blobText);
+  var salt = raw.slice(0,16);
+  var iv = raw.slice(16,28);
+  var cipher = raw.slice(28);
+  var enc = new TextEncoder();
+  var baseKey = await crypto.subtle.importKey("raw", enc.encode(passcode), "PBKDF2", false, ["deriveKey"]);
+  var key = await crypto.subtle.deriveKey({name:"PBKDF2", salt:salt, iterations:600000, hash:"SHA-256"}, baseKey, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+  var plainBuf = await crypto.subtle.decrypt({name:"AES-GCM", iv:iv}, key, cipher);
+  var text = new TextDecoder().decode(plainBuf);
+  return JSON.parse(text);
+}
+
+function attachScrub(wrap, points, geom){
+  if(!wrap || !points || points.length<1) return;
+  var svg=wrap.querySelector("svg");
+  if(!svg) return;
+  var NS="http://www.w3.org/2000/svg";
+  var line=document.createElementNS(NS,"line");
+  line.setAttribute("stroke","var(--ink3)");
+  line.setAttribute("stroke-width","1.5");
+  line.setAttribute("y1", String(geom.top));
+  line.setAttribute("y2", String(geom.bottom));
+  line.style.display="none";
+  svg.appendChild(line);
+  var dot=document.createElementNS(NS,"circle");
+  dot.setAttribute("r","6");
+  dot.setAttribute("fill", geom.color);
+  dot.setAttribute("stroke","var(--surface)");
+  dot.setAttribute("stroke-width","2.5");
+  dot.style.display="none";
+  svg.appendChild(dot);
+  var label=document.createElement("div");
+  label.className="scrub-label";
+  label.setAttribute("aria-hidden","true");
+  wrap.appendChild(label);
+  var scrubbing=false;
+  function hide(){
+    line.style.display="none";
+    dot.style.display="none";
+    label.classList.remove("show");
+  }
+  function update(e){
+    var rect=svg.getBoundingClientRect();
+    if(!rect.width) return;
+    var vx=(e.clientX-rect.left)/rect.width*geom.W;
+    var best=0, bestDist=Infinity;
+    for(var i=0;i<points.length;i++){
+      var d=Math.abs(points[i].x-vx);
+      if(d<bestDist){ bestDist=d; best=i; }
+    }
+    var pt=points[best];
+    line.setAttribute("x1", String(pt.x));
+    line.setAttribute("x2", String(pt.x));
+    line.style.display="";
+    dot.setAttribute("cx", String(pt.x));
+    dot.setAttribute("cy", String(pt.y));
+    dot.style.display="";
+    label.textContent=fmtMoney(pt.value)+" \u00b7 "+shortDate(pt.date);
+    var wrapRect=wrap.getBoundingClientRect();
+    var fx=e.clientX-wrapRect.left;
+    var fy=e.clientY-wrapRect.top;
+    label.classList.add("show");
+    var lw=label.offsetWidth||110;
+    var lh=label.offsetHeight||28;
+    var left=fx;
+    var minLeft=lw/2+4, maxLeft=wrapRect.width-lw/2-4;
+    if(maxLeft<minLeft){ left=wrapRect.width/2; }
+    else { left=Math.max(minLeft, Math.min(maxLeft, left)); }
+    var top=fy-56;
+    if(top-lh<4) top=lh+4;
+    label.style.left=left+"px";
+    label.style.top=top+"px";
+  }
+  wrap.addEventListener("pointerdown", function(e){
+    scrubbing=true;
+    try{ wrap.setPointerCapture(e.pointerId); }catch(err){}
+    update(e);
+    if(e.cancelable) e.preventDefault();
+  });
+  wrap.addEventListener("pointermove", function(e){
+    if(scrubbing) update(e);
+  });
+  function end(e){
+    if(!scrubbing) return;
+    scrubbing=false;
+    hide();
+  }
+  wrap.addEventListener("pointerup", end);
+  wrap.addEventListener("pointercancel", end);
+  wrap.addEventListener("lostpointercapture", function(){ scrubbing=false; hide(); });
+}
+
+function buildMainChart(history){
+  mainFullHistory = history ? history.slice() : [];
+  mainRangeIdx = 0;
+  renderMainChart();
+}
+
+function renderMainChart(){
+  var card=document.getElementById("chartCard");
+  var full=mainFullHistory;
+  var range=RANGES[mainRangeIdx];
+  if(!full || !full.length){ card.innerHTML='<p style="color:var(--ink2);font-size:14px;margin:0">No history yet.</p>'; return; }
+  var history=filterSeries(full, range.days);
+  var W=720,H=300,padL=88,padR=52,padT=28,padB=36;
+  var vals=history.map(function(h){return h.value;});
+  var min=Math.min.apply(null,vals), max=Math.max.apply(null,vals);
+  var vrange=max-min; if(vrange<1000) vrange=1000;
+  var yMin=min-vrange*0.25, yMax=max+vrange*0.35;
+  function x(i){ return padL + (history.length===1 ? (W-padL-padR)/2 : (i/(history.length-1))*(W-padL-padR)); }
+  function y(v){ return padT + (1-(v-yMin)/(yMax-yMin))*(H-padT-padB); }
+  var head='<div class="chart-head"><span class="range-label">'+(range.label==="All"?"All history":"Last "+range.label)+'</span><button type="button" class="range-btn" id="mainRangeBtn" aria-label="Change time range, current: '+range.label+'">'+range.label+'</button></div>';
+  var pts=history.map(function(h,i){return x(i).toFixed(1)+","+y(h.value).toFixed(1);}).join(" ");
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Net worth history chart">';
+  for(var g=0; g<4; g++){
+    var gv=yMin + g*((yMax-yMin)/3);
+    var gy=y(gv);
+    svg+='<line class="gridline" x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'"/>';
+    svg+='<text class="axis" x="'+(W-4)+'" y="'+(gy+5)+'" text-anchor="end">'+fmtCompact(gv)+'</text>';
+  }
+  if(history.length>1){
+    svg+='<polyline points="'+pts+'" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+  var dense=history.length>24;
+  history.forEach(function(h,i){
+    var cx=x(i), cy=y(h.value), last=i===history.length-1;
+    var showLabel = history.length<=6 || i===0 || last || i===Math.floor(history.length/2);
+    if(!dense || i===0 || last || showLabel){
+      svg+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(last?6.5:(dense?3.5:5))+'" fill="'+(last?'var(--green)':'var(--surface)')+'" stroke="var(--green)" stroke-width="3"/>';
+    }
+    if(i===0 || last){
+      svg+='<text class="pt-date" x="'+cx+'" y="'+(H-10)+'" text-anchor="'+(i===0?"start":"end")+'">'+esc(shortDate(h.date))+'</text>';
+    }
+  });
+  svg+='</svg>';
+  var first=history[0], lastH=history[history.length-1];
+  card.innerHTML=head+'<div class="chart-wrap" id="mainChartWrap">'+svg+'</div>';
+  (function(){
+    var wrap=document.getElementById("mainChartWrap");
+    var ptsArr=history.map(function(h,i){ return {x:x(i), y:y(h.value), date:h.date, value:h.value}; });
+    attachScrub(wrap, ptsArr, {W:W, H:H, top:padT, bottom:H-padB, color:"var(--green)"});
+  })();
+  var btn=document.getElementById("mainRangeBtn");
+  if(btn){
+    btn.addEventListener("click",function(){
+      mainRangeIdx=(mainRangeIdx+1)%RANGES.length;
+      renderMainChart();
+    });
+  }
+  document.getElementById("histMeta").textContent = history.length+" point"+(history.length===1?"":"s")+" \u00b7 "+shortDate(first.date)+" \u2013 "+shortDate(lastH.date);
+}
+
+function sparklineSVG(series, isLiab){
+  if(!series || series.length<2) return "";
+  var W=320,H=112,pad=8,padR=46;
+  var vals=series.map(function(s){return s.balance;});
+  var min=Math.min.apply(null,vals), max=Math.max.apply(null,vals);
+  var range=max-min; if(range===0) range=Math.max(100, Math.abs(max)*0.02||100);
+  function x(i){ return pad + (i/(series.length-1))*(W-pad-padR); }
+  function y(v){ return pad + (1-(v-min)/range)*(H-pad*2-10); }
+  var pts=series.map(function(s,i){return x(i).toFixed(1)+","+y(s.balance).toFixed(1);}).join(" ");
+  var color=isLiab?"var(--red)":"var(--green)";
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="max-width:340px" role="img" aria-label="Account trend">';
+  for(var g=0; g<4; g++){
+    var gv=min + g*(range/3);
+    var gy=y(gv);
+    svg+='<line class="gridline" x1="'+pad+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'"/>';
+    svg+='<text class="axis-sm" x="'+(W-padR+5)+'" y="'+(gy+4)+'" text-anchor="start">'+fmtCompact(gv)+'</text>';
+  }
+  svg+='<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  var denseS=series.length>24;
+  series.forEach(function(s,i){
+    var last=i===series.length-1;
+    if(denseS && !(i===0||last)) return;
+    svg+='<circle cx="'+x(i)+'" cy="'+y(s.balance)+'" r="'+(last?4:2.5)+'" fill="'+(last?color:'var(--surface)')+'" stroke="'+color+'" stroke-width="2"/>';
+  });
+  svg+='</svg>';
+  return svg;
+}
+
+function sparkPoints(series){
+  var W=320,H=112,pad=8,padR=46;
+  var vals=series.map(function(s){return s.balance;});
+  var min=Math.min.apply(null,vals), max=Math.max.apply(null,vals);
+  var range=max-min; if(range===0) range=Math.max(100, Math.abs(max)*0.02||100);
+  return series.map(function(s,i){
+    var px=pad+(i/(series.length-1))*(W-pad-padR);
+    var py=pad+(1-(s.balance-min)/range)*(H-pad*2-10);
+    return {x:px, y:py, date:s.date, value:s.balance};
+  });
+}
+
+function renderAcctChart(chartId){
+  var state=acctChartState[chartId];
+  var container=document.getElementById(chartId);
+  if(!state || !container) return;
+  var range=RANGES[state.rangeIdx];
+  var series=state.series||[];
+  var visible=filterSeries(series, range.days);
+  var head='<div class="chart-head"><span class="range-label">'+(range.label==="All"?"All history":"Last "+range.label)+'</span><button type="button" class="range-btn" data-range-btn="'+chartId+'" aria-label="Change time range, current: '+range.label+'">'+range.label+'</button></div>';
+  var inner=head;
+  if(!visible.length){
+    inner+='<div class="vals">No trend points yet. Current: <b>'+esc(fmtMoney2(state.balance))+'</b></div>';
+  } else if(visible.length===1){
+    inner+='<div class="vals">'+esc(shortDate(visible[0].date))+' \u00b7 <b>'+esc(fmtMoney2(visible[0].balance))+'</b> \u2014 single point in this range.</div>';
+  } else {
+    var firstS=visible[0], lastS=visible[visible.length-1];
+    inner+='<div style="max-width:340px"><div class="chart-wrap" id="'+chartId+'-wrap">'+sparklineSVG(visible,state.isLiab)+'</div><div class="xlabels"><span>'+esc(shortDate(firstS.date))+'</span><span>'+esc(shortDate(lastS.date))+'</span></div></div>';
+  }
+  container.innerHTML=inner;
+  if(visible.length>=2){
+    var awrap=document.getElementById(chartId+"-wrap");
+    attachScrub(awrap, sparkPoints(visible), {W:320, H:112, top:8, bottom:94, color: state.isLiab?"var(--red)":"var(--green)"});
+  }
+  var btn=container.querySelector("[data-range-btn]");
+  if(btn){
+    btn.addEventListener("click",function(e){
+      e.stopPropagation();
+      state.rangeIdx=(state.rangeIdx+1)%RANGES.length;
+      renderAcctChart(chartId);
+    });
+  }
+}
+
+function renderData(data){
+  var totals=data.totals||{};
+  document.getElementById("updatedLine").textContent = data.updated ? longDate(data.updated) + " · Updated" : "";
+  document.getElementById("bigNum").textContent = fmtMoney(totals.netWorth);
+  document.getElementById("assetsVal").textContent = fmtMoney(totals.assets);
+  document.getElementById("liabVal").textContent = fmtMoney(totals.liabilities);
+
+  var chipsHtml="";
+  if(typeof totals.changeVsPrev==="number"){
+    var up=totals.changeVsPrev>=0;
+    chipsHtml+='<span class="chip '+(up?"up":"down")+'">'+(up?"▲ ":"▼ ")+esc(fmtMoney(Math.abs(totals.changeVsPrev)))+' vs previous</span>';
+  }
+  document.getElementById("chips").innerHTML=chipsHtml;
+
+  buildMainChart(data.history||[]);
+
+  // Accounts
+  acctChartState={};
+  var accounts=data.accounts||[];
+  // Hide accounts whose entire balance history is $0; they reappear automatically once they hold a balance.
+  accounts=accounts.filter(function(a){
+    var s=a.series||[];
+    for(var i=0;i<s.length;i++){ if((s[i].balance||0)!==0) return true; }
+    return (a.balance||0)!==0;
+  });
+  var assetTypes={"investment":1,"depository":1,"asset":1};
+  var liabTypes={"credit":1,"loan":1};
+  var assets=[], liabs=[], other=[];
+  accounts.forEach(function(a){
+    var t=(a.type||"").toLowerCase();
+    if(assetTypes[t]) assets.push(a);
+    else if(liabTypes[t]) liabs.push(a);
+    else {
+      // fallback by known subtypes / balance context: treat credit/loan in subtype
+      var st=(a.subtype||"").toLowerCase();
+      if(st.indexOf("credit")>=0||st.indexOf("loan")>=0) liabs.push(a); else assets.push(a);
+    }
+  });
+
+  function acctHTML(a, isLiab, idx, group){
+    var initials=esc((a.institution||"?").slice(0,4).toUpperCase());
+    var maskPart=a.mask?(" ····"+esc(a.mask)):"";
+    var typePart=esc([a.type,a.subtype].filter(Boolean).join(" · "));
+    var meta=esc(a.institution||"")+(typePart?" — "+typePart:"")+maskPart;
+    // meta line second: institution already in title? Spec: each row institution, name, type/subtype, mask
+    var title=esc(a.institution? a.institution+" — ":"")+esc(a.name||"Account");
+    var estTag=a.estimated?'<span class="tag">estimate</span>':"";
+    var amtLabel=isLiab?"owed":"";
+    var series=a.series||[];
+    var detailId="d-"+group+"-"+idx;
+    var chartId="chart-"+group+"-"+idx;
+    acctChartState[chartId]={series:series, isLiab:isLiab, rangeIdx:0, balance:a.balance};
+    var detailInner='<div class="acct-chart" id="'+chartId+'"></div>';
+    return '<div class="acct">'
+      +'<button type="button" class="acct-head" data-target="'+detailId+'" aria-expanded="false">'
+      +'<span class="dot '+(isLiab?"red":"")+'">'+initials+'</span>'
+      +'<span class="main"><span class="name">'+title+estTag+'</span><span class="meta" style="display:block">'+esc(meta)+'</span></span>'
+      +'<span class="amt">'+esc(fmtMoney2(a.balance))+(amtLabel?'<span>'+amtLabel+'</span>':"")+'</span>'
+      +'</button>'
+      +'<div class="detail" id="'+detailId+'">'+detailInner+'</div>'
+      +'</div>';
+  }
+
+  var html="";
+  function groupTotal(list){ return list.reduce(function(s,a){return s+(a.balance||0);},0); }
+  if(assets.length){
+    html+='<div class="group-label" style="color:var(--green)">Assets — '+esc(fmtMoney(groupTotal(assets)))+'</div>';
+    assets.forEach(function(a,i){ html+=acctHTML(a,false,i,"a"); });
+  }
+  if(liabs.length){
+    html+='<div class="group-label" style="color:var(--red)">Liabilities — '+esc(fmtMoney(groupTotal(liabs)))+' owed</div>';
+    liabs.forEach(function(a,i){ html+=acctHTML(a,true,i,"l"); });
+  }
+  if(!accounts.length){
+    html='<p style="color:var(--ink2);font-size:14px;margin:0">No accounts in this snapshot.</p>';
+  }
+  document.getElementById("accountsCard").innerHTML=html;
+  Object.keys(acctChartState).forEach(function(cid){ renderAcctChart(cid); });
+
+  // wire toggles
+  var heads=document.querySelectorAll(".acct-head");
+  heads.forEach(function(btn){
+    btn.addEventListener("click",function(){
+      var target=document.getElementById(btn.getAttribute("data-target"));
+      if(!target) return;
+      var open=target.classList.contains("open");
+      target.classList.toggle("open",!open);
+      btn.setAttribute("aria-expanded", String(!open));
+    });
+  });
+
+  // Notes
+  var notes=data.notes||[];
+  if(notes.length){
+    document.getElementById("notesSection").classList.remove("hidden");
+    document.getElementById("notesCard").innerHTML=notes.map(function(n){return "<p>"+esc(n)+"</p>";}).join("");
+  } else {
+    document.getElementById("notesSection").classList.add("hidden");
+  }
+
+  document.getElementById("locked").classList.add("hidden");
+  document.getElementById("unlocked").classList.remove("hidden");
+  window.scrollTo(0,0);
+}
+
+document.getElementById("unlockForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+  var code=document.getElementById("codeInput").value.trim();
+  var err=document.getElementById("errMsg");
+  var btn=document.getElementById("unlockBtn");
+  err.textContent="";
+  document.getElementById("retryBtn").classList.add("hidden");
+  if(!code){ err.textContent="That code didn't work."; return; }
+  btn.disabled=true; btn.textContent="Unlocking…";
+  try{
+    var data=await tryUnlock(code);
+    saveCode(code);
+    renderData(data);
+    updateStaleNote();
+  }catch(ex){
+    if(ex && ex.noBlob){ showLoadError(); }
+    else err.textContent="That code didn't work.";
+  }finally{
+    btn.disabled=false; btn.textContent="Unlock";
+  }
+});
+document.getElementById("lockBtn").addEventListener("click", function(){
+  clearCode();
+  document.getElementById("unlocked").classList.add("hidden");
+  document.getElementById("locked").classList.remove("hidden");
+  var inp=document.getElementById("codeInput"); if(inp) inp.value="";
+  var err=document.getElementById("errMsg"); if(err) err.textContent="";
+  window.scrollTo(0,0);
+});
+document.getElementById("retryBtn").addEventListener("click", async function(){
+  hideLoadError();
+  fetchedBlob=null; blobPromise=null; blobFromCache=false;
+  var saved=loadCode();
+  if(saved){
+    try{
+      var data=await tryUnlock(saved);
+      renderData(data);
+      updateStaleNote();
+    }catch(ex){
+      if(ex && ex.noBlob){ showLoadError(); }
+      else clearCode();
+    }
+  }else{
+    try{ await getBlob(); }
+    catch(ex){ showLoadError(); }
+  }
+});
+(async function(){
+  var saved=loadCode();
+  if(!saved) return;
+  try{
+    var data=await tryUnlock(saved);
+    renderData(data);
+    updateStaleNote();
+  }catch(ex){
+    if(ex && ex.noBlob){ showLoadError(); }
+    else clearCode();
+  }
+})();
+</script>
+</body>
+</html>
